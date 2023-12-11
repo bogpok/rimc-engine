@@ -2,8 +2,8 @@
 
 This python script will allow you to convert any photo of your choice to the filtered image in a retro / vintage style!
 
-![original](gallery/ex1.JPG "original" =250x)
-![Edited](gallery/ex1_edit.JPG "Edited" =250x)
+![original](gallery/ex1.JPG =250x)
+![Edited](gallery/ex1_edit.JPG =250x)
 
 You are allowed to visit gallery folder for more examples.
 
