@@ -1,6 +1,11 @@
-# RIMC (Retro Image Converter) Engine
+# RIMC (Retro Image Converter) Engine for Python
 
 This python script will allow you to convert any photo of your choice to the filtered image in a retro / vintage style!
+
+![original](gallery/ex1.JPG "original")
+![Edited](gallery/ex1_edit.jpg "Edited")
+
+You are allowed to visit gallery folder for more examples.
 
 ## Usage
 
