@@ -1,16 +1,7 @@
 from PIL import Image, ImageOps, ImageFilter, ImageEnhance
 
-from effects import *
-
-# scenarios
-# 1 given the name of the file
-# 2 if orig photo is already loaded in memory
-def apply_film_dec():
-    # 1 open file
-    # apply effects
-    # 1 save file
-    # 2 return new image
-    pass
+from .effects import *
+from .tools import *
 
 def apply(img: Image, size = (1080, 1080)) -> Image:
     img = ImageOps.exif_transpose(img)
@@ -84,8 +75,6 @@ def apply(img: Image, size = (1080, 1080)) -> Image:
         
     return img_contain
 
-
-
 def open_apply_save(name, orig_path = "orig/", out_path = "out/", suffix="_edit") -> None:
     """Opens file, applies filter, saves the file
     name:
@@ -100,9 +89,9 @@ def open_apply_save(name, orig_path = "orig/", out_path = "out/", suffix="_edit"
     orig = Image.open(orig_path+name)
     out = apply(orig)
 
-    # save    
-    n = name.split('.')
-    o = out_path+n[0]+suffix+'.'+n[1]
+    # save        
+    o = out_path+suffixname(name, suffix)
     print("Saving: ", o)
     out.save(o)
     
+

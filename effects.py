@@ -215,3 +215,24 @@ def grain(image, intensity):
     noisy_image = Image.fromarray(noisy_image_array)
 
     return noisy_image
+
+
+def centered_crop(orig_img, crop_size = 1080):    
+    aspect = orig_img.width / orig_img.height
+
+    if orig_img.width > orig_img.height:
+        new_size = (crop_size, int(crop_size / aspect))
+    else:
+        new_size = (int(crop_size * aspect), crop_size)
+
+    resized_img = orig_img.resize(new_size, Image.LANCZOS)
+    # Calculate cropping coordinates to center-crop the other dimension
+    crop_left = (resized_img.width - crop_size) / 2
+    crop_top = (resized_img.height - crop_size) / 2
+    crop_right = crop_left + crop_size
+    crop_bottom = crop_top + crop_size
+
+    # Perform center-crop
+    cropped_img = resized_img.crop((crop_left, crop_top, crop_right, crop_bottom))
+
+    return cropped_img
