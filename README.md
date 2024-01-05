@@ -17,9 +17,7 @@ This python script will allow you to convert any photo of your choice to the fil
   </tr>
 </table>
 
-
-
-You are allowed to visit gallery folder for more examples.
+You are allowed to visit [gallery](/gallery) for more examples.
 
 ## Usage
 
@@ -30,3 +28,30 @@ This is the script file, in which there is a finction to take an image name and 
 ### main.py
 
 This is an example of simple usage of the script
+
+
+
+## ideas
+
+
+recipies
+predefined collection / film
+
+
+Processing / Developing
+
+## Notes
+
+Crop notes
+    
+```python
+img2 = Image.open(path+name)
+k = 0.5
+# img2.resize((int(img2.size[0]*k), int(img2.size[1]*k)))
+mk = min(img2.size)
+img2 = ImageOps.fit(img2, (mk, mk), centering=(0.5, 0.7))
+
+img2.show() 
+
+# img_contain = ImageOps.crop(img_contain, 200)
+```

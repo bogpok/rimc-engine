@@ -1,13 +1,13 @@
-from convert_image import apply_film
+from convert import open_apply_save
 import os
 
 def main():
-    path = "img/"    
+    path = "orig/"    
     # name = "DSC_0005.JPG" # "IMG_20230228_134853.jpg"
     # apply_film(name)
     print(os.listdir(path))
     for f in os.listdir(path):
-        apply_film(f)
+        open_apply_save(f)
 
 if __name__ == "__main__":
     main()

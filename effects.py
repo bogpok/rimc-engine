@@ -1,8 +1,9 @@
-from PIL import Image, ImageOps, ImageFilter, ImageEnhance, ImageDraw
+from PIL import Image, ImageFilter, ImageDraw
 import numpy as np
 from random import randint
 
-def apply_vignette(image, sizep=0.1, transparency=0, brightness=150, density=60, frame="rect"):
+
+def vignette(image, sizep=0.1, transparency=0, brightness=150, density=60, frame="rect"):
     """
     Apply vignette 
     
@@ -48,7 +49,7 @@ def apply_vignette(image, sizep=0.1, transparency=0, brightness=150, density=60,
 
     return vignette_image
 
-def apply_liks(image, r_max=500, intensity=250, density=100, 
+def leaks(image, r_max=500, intensity=250, density=100, 
                offset=(0,0), transparency=200,
                uselines = False):
     """
@@ -188,11 +189,11 @@ def cbalance(image, rk = 0, gk = 0, bk = 0):
     b_tinted = b.point(lambda p: p + int(255 * bk))
 
     # Merge the modified red channel with the original green and blue channels
-    red_tinted_image = Image.merge('RGB', (r_tinted, g_tinted, b_tinted))
+    tinted_image = Image.merge('RGB', (r_tinted, g_tinted, b_tinted))
 
-    return red_tinted_image
+    return tinted_image
 
-def add_grain(image, intensity):
+def grain(image, intensity):
     """
     Add a grain effect to the image.
 
@@ -214,101 +215,3 @@ def add_grain(image, intensity):
     noisy_image = Image.fromarray(noisy_image_array)
 
     return noisy_image
-
-def apply_film(name, size = (1200, 1200)):
-    path = "img/"    
-
-    img = Image.open(path+name)
-    img = ImageOps.exif_transpose(img)
-    print(img.size)
-
-    # crop
-    img_contain = ImageOps.fit(img, size, centering=(0.55, 0.7))
-    
-
-    # color: +1
-    enhancer = ImageEnhance.Color(img_contain)
-    img_contain = enhancer.enhance(1.24)
-
-    # brightness
-    br = ImageEnhance.Brightness(img_contain)
-    img_contain = br.enhance(1.1)
-
-    # sharpness: -3
-    img_contain = img_contain.filter(ImageFilter.GaussianBlur(1)) #0.65
-
-    # Contrast
-    enh = ImageEnhance.Contrast(img_contain)
-    img_contain = enh.enhance(1.6)
-    # img_contain = ImageOps.autocontrast(img_contain, 0.65) #0.65
-
-    # Grain
-    img_contain = add_grain(img_contain, 0.02)
-   
-
-    # POST
-    sharper = ImageEnhance.Sharpness(img_contain)
-    img_contain = sharper.enhance(1.15)
-
-    enhancer = ImageEnhance.Color(img_contain)
-    img_contain = enhancer.enhance(0.8)
-
-    # light leaks
-    
-    liks_preset1 = {"r_max":1000, "intensity":200, 
-                    "density":50, "offset":(100,50),
-                    "transparency":250, "uselines": False} # Nice
-    liks_preset2 = {"r_max":700, "intensity":50, 
-                    "density":20, "uselines": True} # rollers trace    
-    liks_preset3 = {"r_max":150, "intensity":500, 
-                    "density":10, "uselines": True} # rollers trace 2 - more    
-    liks_preset4 = {"r_max":150, "intensity":50, 
-                    "density":60, "uselines": True} # clear line traces    
-    liks_preset5 = {"r_max":100, "intensity":250, 
-                    "density":40, "uselines": True} # clear line traces 2 - more
-
-    img_contain = apply_liks(img_contain, **liks_preset1)
-    
-
-    #  Tint
-    brown = (0.1, -0.01, -0.1)
-    red = (0.1, -0.05, -0.1)
-    blue = (-0.1, -0.01, 0)
-    img_b = cbalance(img_contain, *brown)
-    
-    # vignette
-    vtype = 1
-    
-    if vtype == 0:
-        #   small rectangle frame
-        img_b = apply_vignette(img_b, sizep=0.02, transparency=0, 
-                            brightness=220, density=60, frame='rect')
-    elif vtype == 1:
-        #   pale rectangle vignette
-        img_b = apply_vignette(img_b, sizep=0.01, transparency=0, 
-                               brightness=220, density=60, frame='rect') 
-    elif vtype == 2:
-        #   Nice round vignette
-        img_b = apply_vignette(img_b, sizep=0.05, transparency=120,
-                               brightness=250, density=5, frame="round") 
-
-    # save
-    out_path = "out/"
-    n = name.split('.')
-    print(n)
-    img_b.save(out_path+n[0]+"_edit"+'.'+n[1])
-
-
-
-""" Crop notes
-    
-    img2 = Image.open(path+name)
-    k = 0.5
-    # img2.resize((int(img2.size[0]*k), int(img2.size[1]*k)))
-    mk = min(img2.size)
-    img2 = ImageOps.fit(img2, (mk, mk), centering=(0.5, 0.7))
-    
-    img2.show() 
-    
-    # img_contain = ImageOps.crop(img_contain, 200)
-"""
