@@ -2,3 +2,4 @@ __pycache__/
 orig/*
 out/*
 dist/
+venv_test/
