@@ -1,4 +1,6 @@
 from PIL import Image, ImageFilter, ImageDraw
+from PIL import ImageOps
+
 import numpy as np
 from random import randint
 
@@ -218,6 +220,7 @@ def grain(image, intensity):
 
 
 def centered_crop(orig_img, crop_size = 1080):    
+    orig_img = ImageOps.exif_transpose(orig_img)
     aspect = orig_img.width / orig_img.height
 
     if orig_img.width > orig_img.height:
