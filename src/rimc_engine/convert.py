@@ -53,7 +53,9 @@ def apply(img: Image, size = (1080, 1080),
         
     return img_contain
 
-def open_apply_save(name, orig_path = "orig/", out_path = "out/", suffix="_edit") -> None:
+def open_apply_save(name, orig_path = "orig/", out_path = "out/", 
+                    suffix="_edit", size = (1080, 1080), 
+                    recipe: Recipe = recipes_collection['CLSC']) -> None:
     """Opens file, applies filter, saves the file
     name:
         filename to open
@@ -65,7 +67,7 @@ def open_apply_save(name, orig_path = "orig/", out_path = "out/", suffix="_edit"
         mark outputed filename
     """      
     orig = Image.open(orig_path+name)
-    out = apply(orig)
+    out = apply(orig, size=size, recipe=recipe)
 
     # save        
     o = out_path+suffixname(name, suffix)
