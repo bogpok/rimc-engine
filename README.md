@@ -33,17 +33,14 @@ This is an example of simple usage of the script
 
 ## ideas
 
-
-recipies
+recipes
 predefined collection / film
-
 
 Processing / Developing
 
 ## Notes
 
-Crop notes
-    
+Cropping
 ```python
 img2 = Image.open(path+name)
 k = 0.5

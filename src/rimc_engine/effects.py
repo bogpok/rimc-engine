@@ -200,7 +200,10 @@ def grain(image, intensity):
     Add a grain effect to the image.
 
     image: The input image.
-    intensity: Intensity of the grain effect (0.0 to 1.0).
+    intensity: Intensity of the grain effect (0.0 to 1.0). 
+    0.2 is recommended maximum for artistic effect,
+    0.1 is strong 
+    0.05 for nice visible grain,
     
     return: Image with added grain effect.
     """

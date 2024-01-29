@@ -2,76 +2,54 @@ from PIL import Image, ImageOps, ImageFilter, ImageEnhance
 
 from .effects import *
 from .tools import *
+from .recipes import Recipe, recipes_collection
 
-def apply(img: Image, size = (1080, 1080)) -> Image:
+def apply(img: Image, size = (1080, 1080), 
+          recipe: Recipe = recipes_collection['CLSC']) -> Image:
+    """Applies effect by given recipe
+    """
     img = ImageOps.exif_transpose(img)
-    print("Original size:", img.size)
-
-    # crop
+    # Crop
     img_contain = ImageOps.fit(img, size, centering=(0.55, 0.7))    
 
-    # color: +1
+    # Color
     enhancer = ImageEnhance.Color(img_contain)
-    img_contain = enhancer.enhance(1.24)
+    img_contain = enhancer.enhance(1 + recipe.color)
 
-    # brightness
+    # Brightness
     br = ImageEnhance.Brightness(img_contain)
-    img_contain = br.enhance(1.1)
-
-    # sharpness: -3
-    img_contain = img_contain.filter(ImageFilter.GaussianBlur(1)) #0.65
-
+    img_contain = br.enhance(1 + recipe.brightness)
+    
     # Contrast
     enh = ImageEnhance.Contrast(img_contain)
-    img_contain = enh.enhance(1.6)
-    # img_contain = ImageOps.autocontrast(img_contain, 0.65) #0.65
+    img_contain = enh.enhance(1 + recipe.contrast)
+    
+    # Blur
+    # The radius parameter in ImageFilter.GaussianBlur controls the strength 
+    # of the blur. A smaller radius value results in a lighter blur, 
+    # while a larger radius value increases the strength of the blur.
+    img_contain = img_contain.filter(ImageFilter.GaussianBlur(recipe.blur)) 
 
     # Grain
-    img_contain = grain(img_contain, 0.02)   
+    img_contain = grain(img_contain, recipe.grain)   
 
-    # POST
+    # Sharpness
     sharper = ImageEnhance.Sharpness(img_contain)
-    img_contain = sharper.enhance(1.15)
-
-    enhancer = ImageEnhance.Color(img_contain)
-    img_contain = enhancer.enhance(0.8)
-
-    # light leaks    
-    liks_preset1 = {"r_max":1000, "intensity":200, 
-                    "density":50, "offset":(100,50),
-                    "transparency":250, "uselines": False} # Nice
-    liks_preset2 = {"r_max":700, "intensity":50, 
-                    "density":20, "uselines": True} # rollers trace    
-    liks_preset3 = {"r_max":150, "intensity":500, 
-                    "density":10, "uselines": True} # rollers trace 2 - more    
-    liks_preset4 = {"r_max":150, "intensity":50, 
-                    "density":60, "uselines": True} # clear line traces    
-    liks_preset5 = {"r_max":100, "intensity":250, 
-                    "density":40, "uselines": True} # clear line traces 2 - more
-
-    img_contain = leaks(img_contain, **liks_preset1)    
+    img_contain = sharper.enhance(1 + recipe.sharpness)    
 
     #  Tint
-    brown = (0.1, -0.01, -0.1)
-    red = (0.1, -0.05, -0.1)
-    blue = (-0.1, -0.01, 0)
-    img_contain = cbalance(img_contain, *brown)
+    img_contain = cbalance(img_contain, *recipe.tint)
+
+    # Light leaks    
+    img_contain = leaks(img_contain, **recipe.leaks)    
     
-    # vignette
-    vtype = 1
-    
-    if vtype == 0:
-        #   small rectangle frame
-        img_contain = vignette(img_contain, sizep=0.02, transparency=0, 
-                            brightness=220, density=60, frame='rect')
-    elif vtype == 1:
-        #   pale rectangle vignette
-        img_contain = vignette(img_contain, sizep=0.01, transparency=0, 
-                               brightness=220, density=60, frame='rect') 
-    elif vtype == 2:
-        #   Nice round vignette
-        img_contain = vignette(img_contain, sizep=0.05, transparency=120,
-                               brightness=250, density=5, frame="round") 
+    # Vignette    
+    img_contain = vignette(img_contain, **recipe.vignette) 
+
+    # POST
+    # post color
+    enhancer = ImageEnhance.Color(img_contain)
+    img_contain = enhancer.enhance(0.8)
         
     return img_contain
 

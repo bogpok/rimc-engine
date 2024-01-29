@@ -5,7 +5,7 @@ def suffixname(name, suffix):
     return n[0]+suffix+'.'+n[1]
 
 def buffer2upload(var_img, name, DjangoInMemoryUploadedFile, suffix="crop"):
-    # Save the cropped image in memory
+    # Save the image in memory
     var_img_buffer = BytesIO()
     var_img.save(var_img_buffer, format='JPEG')
     
