@@ -12,8 +12,7 @@ def vignette(image, sizep=0.1, transparency=0, brightness=150, density=60, frame
     sizep: size of the vignette frame in percents of original image (0.-1.0)
     transparency: how transparent black mask is. (0-255) where 0 is fully dark
     brightness: brightness of the output print (0-255). More -> brighter
-    intensity: number of figures
-    density: overall visibility, controlled by blur
+    density: overall visibility, controlled by blur (less - less visible)
 
     frame: geometrical types of vignette. Allowed values:
         "rect", "round"
@@ -222,23 +221,31 @@ def grain(image, intensity):
     return noisy_image
 
 
-def centered_crop(orig_img, crop_size = 1080):    
-    orig_img = ImageOps.exif_transpose(orig_img)
+def centered_crop(orig_img, size = 1080):    
+    """Tooks orig_img and crops it into square of size [size x size]
+    """
+    img = ImageOps.exif_transpose(orig_img)
     aspect = orig_img.width / orig_img.height
 
-    if orig_img.width > orig_img.height:
-        new_size = (crop_size, int(crop_size / aspect))
+    
+    # Crop largest side, so the image become square
+    if aspect > 1:
+        # width > height
+        crop_square = [orig_img.width / 2 - orig_img.height/2,
+                       0,
+                       orig_img.width / 2 + orig_img.height/2,
+                       orig_img.height]
+    elif aspect == 1:
+        crop_square = None
     else:
-        new_size = (int(crop_size * aspect), crop_size)
+        # width < height
+        crop_square = [0,
+                       orig_img.height/2 - orig_img.width / 2,
+                       orig_img.width,
+                       orig_img.height/2 + orig_img.width / 2]
+    
+    if crop_square != None:
+        img = img.crop(crop_square)
 
-    resized_img = orig_img.resize(new_size, Image.LANCZOS)
-    # Calculate cropping coordinates to center-crop the other dimension
-    crop_left = (resized_img.width - crop_size) / 2
-    crop_top = (resized_img.height - crop_size) / 2
-    crop_right = crop_left + crop_size
-    crop_bottom = crop_top + crop_size
-
-    # Perform center-crop
-    cropped_img = resized_img.crop((crop_left, crop_top, crop_right, crop_bottom))
-
-    return cropped_img
+    # resize it to fit requsted size    
+    return img.resize((size,size), Image.LANCZOS)
