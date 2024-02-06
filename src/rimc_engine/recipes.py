@@ -75,7 +75,7 @@ class Presets:
 class Recipe:
     """Defines configuration set for filters
     """
-    def __init__(self, name: str,
+    def __init__(self, name: str, altname: str,
                  brightness=0, contrast=0, blur=0,
                  sharpness=0, color=0, grain=0,
                  tint=Presets.tints["neutral"],
@@ -84,6 +84,7 @@ class Recipe:
                  ):
         
         self.name = name
+        self.altname = altname
 
         self.check(brightness, (-7, 7))
         self.brightness = brightness*Units.brightness
@@ -113,43 +114,43 @@ class Recipe:
 
 """ Predefied collection of recipes """
 recipes_collection = {
-    'CLSC':Recipe(name='CLSC', 
+    'CLSC':Recipe(name='CLSC', altname="classic", 
                   brightness=2, contrast=4, blur=2,
                   sharpness=1, grain=2,
                   tint=Presets.tints["brown"],
                   leaks=Presets.leaks["classic"],
                   vignette=Presets.vignettes["rect_pale"]),
-    'PORT':Recipe(name='PORT', 
+    'PORT':Recipe(name='PORT', altname="portra", 
                   brightness=1, contrast=-1, blur=0,
                   sharpness=-0.5, color=2.5, grain=2,
                   tint=Presets.tints["portra"],
                   vignette=Presets.vignettes["round_xlight"],
                   leaks=Presets.leaks["xlight"]),
-    'GOLD':Recipe(name='GOLD', 
+    'GOLD':Recipe(name='GOLD', altname="gold", 
                   brightness=1, contrast=-0.5, blur=0,
                   sharpness=-1, color=3, grain=3,
                   tint=Presets.tints["gold"],
                   vignette=Presets.vignettes["round_xlight"],
                   leaks=Presets.leaks["xlight"]),
-    'SUPR':Recipe(name='SUPR', 
+    'SUPR':Recipe(name='SUPR', altname="superia", 
                   brightness=0.5, contrast=0.7, blur=0.5,
                   sharpness=0, color=1, grain=4,
                   tint=Presets.tints["superia"],
                   vignette=Presets.vignettes["round_xlight"],
                   leaks=Presets.leaks["xlight"]),
-    'bwSV':Recipe(name='bwSV', 
+    'bwSV':Recipe(name='bwSV', altname="bw silver", 
                   brightness=1.5, contrast=1.1, blur=0.5,
                   sharpness=1, color=-10, grain=2,
                   tint=Presets.tints["silvertone"],
                   vignette=Presets.vignettes["round_xlight"],
                   leaks=Presets.leaks["xlight"]),
-    'bwRE':Recipe(name='bwRE', 
+    'bwRE':Recipe(name='bwRE', altname="bw retro", 
                   brightness=1, contrast=-0.5, blur=1,
                   sharpness=0, color=-10, grain=2,
                   tint=Presets.tints["retro"],
                   vignette=Presets.vignettes["round_xlight"],
                   leaks=Presets.leaks["xlight"]),
-    'POL6':Recipe(name='POL6', 
+    'POL6':Recipe(name='POL6', altname="polaroid6xx", 
                   brightness=2, contrast=1, blur=1.5,
                   sharpness=-2, color=1, grain=4,
                   tint=Presets.tints["polaroid600"],
