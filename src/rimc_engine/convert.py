@@ -4,13 +4,16 @@ from .effects import *
 from .tools import *
 from .recipes import Recipe, recipes_collection
 
-def apply(img: Image, size = (1080, 1080), 
+def apply(img: Image, size = (1080, 1080), keep_original_size = False,
           recipe: Recipe = recipes_collection['CLSC']) -> Image:
     """Applies effect by given recipe
     """
     img = ImageOps.exif_transpose(img)
     # Crop
-    img_contain = ImageOps.fit(img, size, centering=(0.55, 0.7))    
+    if (not keep_original_size):
+        img_contain = ImageOps.fit(img, size, centering=(0.55, 0.7))    
+    else: 
+        img_contain = img
 
     # Color
     enhancer = ImageEnhance.Color(img_contain)
@@ -54,7 +57,7 @@ def apply(img: Image, size = (1080, 1080),
     return img_contain
 
 def open_apply_save(name, orig_path = "orig/", out_path = "out/", 
-                    suffix="_edit", size = (1080, 1080), 
+                    suffix="_edit", size = (1080, 1080), keep_original_size = False,
                     recipe: Recipe = recipes_collection['CLSC']) -> None:
     """Opens file, applies filter, saves the file
     name:
@@ -67,7 +70,7 @@ def open_apply_save(name, orig_path = "orig/", out_path = "out/",
         mark outputed filename
     """      
     orig = Image.open(orig_path+name)
-    out = apply(orig, size=size, recipe=recipe)
+    out = apply(orig, size=size, recipe=recipe, keep_original_size=keep_original_size)
 
     # save        
     o = out_path+suffixname(name, suffix)

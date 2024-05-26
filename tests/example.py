@@ -1,4 +1,4 @@
-from rimc_engine import open_apply_save, Recipe
+from rimc_engine import open_apply_save, Recipe, recipes_collection
 import os
 from datetime import datetime
 
@@ -12,7 +12,9 @@ def main():
             # Get the current timestamp
             current_timestamp = round(datetime.timestamp(datetime.now())/10)
             print(current_timestamp)
-            open_apply_save(f, suffix=str(current_timestamp))
+            print(recipes_collection)
+            open_apply_save(f, suffix=str(current_timestamp), recipe=recipes_collection["GOLD"])
+            open_apply_save(f, suffix=str(current_timestamp)+"S", recipe=recipes_collection["SUPR"])
 
         
 

@@ -182,6 +182,7 @@ Type 2 - round, classic vignette
 - "retro":(6, 3, -4),
 - "polaroid600":(4, 0, 6)
 
-
+# changelog
+ 26/05/24 - add keep_original_size to convert.py
 
 
